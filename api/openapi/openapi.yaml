@@ -1,0 +1,723 @@
+openapi: 3.0.3
+info:
+  title: SpielD Rest API
+  version: 0.0.1
+  license: 
+    name: GPL-3.0-or-later
+  contact:
+    name: Azorimor
+    url: https://github.com/Azorimor/spield
+servers:
+  - url: https://api.spield.org
+    description: Official API server
+  - url: http://127.0.0.1:3000
+    description: Local development server
+paths: 
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: Created user object
+  /user/auth/local/login:
+    get:
+      tags:
+        - user
+      summary: Logs user into the system
+      description: ''
+      operationId: loginUser
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: true
+          schema:
+            type: string
+            minLength: 6
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+            format: password
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema: 
+                properties: 
+                  accessToken:
+                    type: string
+                    example: asdfasdfasdfasdfasdfasdfasdfasf
+                  refreshToken: 
+                    type: string
+                    example: asdfasdfasdfasdlhpsndonh
+                  user: 
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username/password supplied
+  /user/auth/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user
+      description: ''
+      operationId: logoutUser
+      responses:
+        default:
+          description: successful operation
+  '/user/{id}':
+    get:
+      tags:
+        - user
+      summary: Get user by user id
+      description: ''
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: 'The user id that needs to be fetched.'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: User not found
+    patch:
+      tags:
+        - user
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: id that need to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: successful operation
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: User not found
+  /spiel:
+    post:
+      tags: 
+        - spiel
+      summary: Create new spiel.
+      description: Create a new spiel by the logged in user.
+      operationId: createSpiel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                ownerId: 
+                  type: integer
+                  format: int64
+                  example: 10
+                name: 
+                  type: string
+                  minLength: 4
+                  example: FirstGame
+                public:
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spiel'
+  '/spiel/{id}':
+    get:
+      tags: 
+        - spiel
+      summary: Get spiel by spiel id.
+      description: Get information about a spiel by spiel id.
+      operationId: getSpielById
+      parameters:
+        - name: id
+          in: path
+          description: Id of the spiel to be deleted.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spiel'
+        '400':
+          description: Invalid id supplied
+        '404': 
+          description: Spiel not found
+    patch:
+      tags: 
+        - spiel
+      summary: Update spiel by spiel id.
+      description: Update information about a spiel by spiel id.
+      operationId: updateSpielById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties: 
+                name:
+                  type: string
+                  minLength: 4
+                  example: FirstGame
+                public:
+                  type: boolean
+                  example: false
+                ownerId:
+                  type: integer
+                  format: int64
+                  example: 10
+                nickname:
+                  type: string
+                  enum:
+                    - generator
+                    - check
+                    - nocheck
+                randomizeAnswers:
+                  type: boolean
+                  example: true
+                randomizeQuestions: 
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Spiel'
+        '400':
+          description: Invalid id supplied
+        '404': 
+          description: Spiel not found
+    delete:
+      tags:
+        - spiel
+      summary: Delete spiel
+      description: This can only be done by the logged in user.
+      operationId: deleteSpiel
+      parameters:
+        - name: id
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: Spiel not found
+  '/question/{spielId}':
+    post:
+      tags: 
+        - question
+      summary: Create new question for the given spiel.
+      description: Create a new question by the logged in user.
+      operationId: createQuestion
+      parameters:
+        - name: spielId
+          in: path
+          description: Id of the spiel to which the question belongs.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                spielId:
+                  type: string
+                  example: 1QIuPR1NGGT
+                type: 
+                  type: string
+                  enum: 
+                    - truefalse
+                    - multiplechoice
+                    - open
+                    - puzzle
+                    - poll
+                    - cloud
+                    - open
+                  example: multiplechoice
+                  default: multiplechoice
+                question:
+                  type: string
+                  example: What is the domain name for the country Tuvalu?
+                answers:
+                  type: array
+                  items:
+                    properties:
+                      text: 
+                        type: string
+                        example: .tv
+                      correct:
+                        type: boolean
+                        example: true
+      responses:
+        '200':
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '400':
+          description: Invalid id supplied
+        '404': 
+          description: Spiel not found
+  '/question/{spielId}/{questionId}':
+    put:
+      tags: 
+        - question
+      summary: Update question for the given spiel with id.
+      description: Update Question by for spiel with id.
+      operationId: updateQuestion
+      parameters:
+        - name: spielId
+          in: path
+          description: Id of the spiel to which the question belongs.
+          required: true
+          schema:
+            type: string
+        - name: questionId
+          in: path
+          description: Id of the question which should be updated.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                spielId:
+                  type: string
+                  example: 1QIuPR1NGGT
+                type: 
+                  type: string
+                  enum: 
+                    - truefalse
+                    - multiplechoice
+                    - open
+                    - puzzle
+                    - poll
+                    - cloud
+                    - open
+                  example: multiplechoice
+                  default: multiplechoice
+                question:
+                  type: string
+                  example: What is the domain name for the country Tuvalu?
+                answers:
+                  type: array
+                  items:
+                    properties:
+                      text: 
+                        type: string
+                        example: .tv
+                      correct:
+                        type: boolean
+                        example: true
+      responses:
+        '200':
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '400':
+          description: Invalid spielId or questionId supplied
+        '404': 
+          description: Spiel or Question not found
+    delete:
+      tags:
+        - question
+      summary: Delete question
+      description: This can only be done by the logged in user.
+      operationId: deleteQuestion
+      parameters:
+        - name: spielId
+          in: path
+          description: Id of the spiel to which the question belongs.
+          required: true
+          schema:
+            type: string
+        - name: questionId
+          in: path
+          description: Id of the question which should be updated.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid spielId or questionId supplied
+        '404': 
+          description: Spiel or Question not found
+  '/info/{spielId}':
+    post:
+      tags: 
+        - info
+      summary: Create new info slide for the given spiel.
+      description: Create a new info slide by the logged in user.
+      operationId: createInfoSlide
+      parameters:
+        - name: spielId
+          in: path
+          description: Id of the spiel to which the info slide belongs.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                spielId:
+                  type: string
+                  example: 1QIuPR1NGGT
+                type: 
+                  type: string
+                  enum: 
+                    - simple
+                  example: simple
+                  default: simple
+                headline:
+                  type: string
+                  nullable: true
+                imageUrl:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Info'
+        '400':
+          description: Invalid spielId supplied
+        '404': 
+          description: Spiel not found
+  '/info/{spielId}/{infoId}':
+    put:
+      tags: 
+        - info
+      summary: Update info slide for the given spiel with id.
+      description: Update info slide by for spiel with id.
+      operationId: updateInfoSlide
+      parameters:
+        - name: spielId
+          in: path
+          description: Id of the spiel to which the info slide belongs.
+          required: true
+          schema:
+            type: string
+        - name: infoId
+          in: path
+          description: Id of the info slide which should be updated.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                spielId:
+                  type: string
+                  example: 1QIuPR1NGGT
+                type: 
+                  type: string
+                  enum: 
+                    - simple
+                  example: simple
+                  default: simple
+                headline:
+                  type: string
+                  nullable: true
+                imageUrl:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Info'
+        '400':
+          description: Invalid spielId or infoId supplied
+        '404': 
+          description: Spiel or info slide not found
+    delete:
+      tags:
+        - info
+      summary: Delete info slide
+      description: This can only be done by the logged in user.
+      operationId: deleteQuestion
+      parameters:
+        - name: spielId
+          in: path
+          description: Id of the spiel to which the info slide belongs.
+          required: true
+          schema:
+            type: string
+        - name: infoId
+          in: path
+          description: Id of the info slide which should be updated.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid spielId or infoId supplied
+        '404': 
+          description: Spiel or info slide not foundd
+
+
+components:
+  schemas:
+    User:
+      properties:
+        id: 
+          type: integer
+          format: int64
+          example: 10
+        username: 
+          type: string
+          minLength: 6
+          example: user
+        email: 
+          type: string
+          format: email
+          example: example@domain.com
+        password: 
+          type: string
+          format: password
+          example: examplePassword
+          nullable: true
+        firstName:
+          type: string
+          example: Max
+          nullable: true
+        lastName: 
+          type: string
+          example: Mustermann
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          example: 2021-03-10T14:44:39+0000
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2021-03-10T14:44:39+0000
+          nullable: true
+        games:
+          type: array
+          items:
+            properties: 
+              spielId:
+                type: string
+                example: 1QIuPR1NGGT
+              name: 
+                type: string
+                example: FirstGame
+              public:
+                type: boolean
+                example: true
+              updatedAt:
+                type: string
+                format: date-time
+                example: 2021-03-10T14:44:39+0000
+    Spiel:
+      properties: 
+        id: 
+          type: string
+          example: 1QIuPR1NGGT
+        name: 
+          type: string
+          minLength: 4
+          example: FirstGame
+        public: 
+          type: boolean
+          example: false
+        owner:
+          $ref: '#/components/schemas/User'
+          deprecated: true
+        questions:
+          items: 
+            $ref: '#/components/schemas/Question'
+        nickname: 
+          type: string
+          enum:
+            - generator
+            - check
+            - nocheck
+          example: check
+          default: check
+        randomizeAnswers: 
+          type: boolean
+          example: true
+          default: true
+        randomizeQuestions:
+          type: boolean
+          example: true
+          default: true
+        createdAt:
+          type: string
+          format: date-time
+          example: 2021-03-10T14:44:39+0000
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2021-03-10T14:44:39+0000
+          nullable: true
+        slides:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Slide'
+    Slide:
+      properties: 
+        id: 
+          type: integer
+          format: int64
+          example: 10
+        type:
+          type: string
+          enum: 
+            - question
+            - info
+          example: question
+        spielId:
+          type: string
+          example: 1QIuPR1NGGT
+        question:
+          $ref: '#/components/schemas/Question'
+        info: 
+          $ref: '#/components/schemas/Info'
+    Question:
+      properties:
+        id: 
+          type: integer
+          format: int64
+          example: 10
+        type: 
+          type: string
+          enum: 
+            - truefalse
+            - multiplechoice
+            - open
+            - puzzle
+            - poll
+            - cloud
+            - open
+          example: multiplechoice
+          default: multiplechoice
+        question:
+          type: string
+          example: What is the domain name for the country Tuvalu?
+        answers:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Answer'
+    Info:
+      properties:
+        id: 
+          type: integer
+          format: int64
+          example: 10
+        type: 
+          type: string
+          enum: 
+            - simple
+        healine: 
+          type: string
+          example: Headline information
+          nullable: true
+        imageUrl: 
+          type: string
+          format: url
+          nullable: true
+    Answer:
+      properties:
+        id: 
+          type: integer
+          format: int64
+          example: 10
+        questionId:
+          type: integer
+          format: int64
+          example: 10
+        text: 
+          type: string
+          example: .tv
+        correct:
+          type: boolean
+          example: true
