@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { Slide } from './Slide';
 import { User } from './User';
 
 export enum NickNameSetting {
@@ -37,7 +39,10 @@ export class Spiel {
     enum: NickNameSetting,
     default: NickNameSetting.CHECK
   })
-  nickname!: string;
+  nickname!: NickNameSetting;
+
+  @OneToMany(() => Slide, (slide) => slide.spiel)
+  slides!: Slide[];
 
   @Column({ default: true })
   randomizeAnswers!: boolean;
