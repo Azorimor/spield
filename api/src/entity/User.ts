@@ -31,7 +31,7 @@ export class User {
   @Column({ nullable: true })
   lastName!: string;
 
-  @OneToMany(() => Spiel, (spiel) => spiel.owner)
+  @OneToMany(() => Spiel, (spiel: Spiel) => spiel.owner)
   games!: Spiel[];
 
   @CreateDateColumn({ type: 'timestamptz' })

@@ -30,10 +30,9 @@ export class Spiel {
   @Column({ default: true })
   public!: boolean;
 
-  @ManyToOne(() => User, (user) => user.games)
+  @ManyToOne(() => User, (user: User) => user.games)
   owner!: User;
 
-  // TODO questions, slides
   @Column({
     type: 'enum',
     enum: NickNameSetting,
@@ -41,7 +40,7 @@ export class Spiel {
   })
   nickname!: NickNameSetting;
 
-  @OneToMany(() => Slide, (slide) => slide.spiel)
+  @OneToMany(() => Slide, (slide: Slide) => slide.spiel)
   slides!: Slide[];
 
   @Column({ default: true })
