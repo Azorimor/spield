@@ -25,7 +25,7 @@ export class Spiel {
   @Column()
   name!: string;
 
-  @Column()
+  @Column({ default: true })
   public!: boolean;
 
   @ManyToOne(() => User, (user) => user.games)
@@ -45,9 +45,9 @@ export class Spiel {
   @Column({ default: true })
   randomizeQuestions!: boolean;
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 }

@@ -34,9 +34,9 @@ export class User {
   @OneToMany(() => Spiel, (spiel) => spiel.owner)
   games!: Spiel[];
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 }
