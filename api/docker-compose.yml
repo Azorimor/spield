@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: securePassword
+      POSTGRES_USER: spield
+      POSTGRES_DB: spield
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+  redis:
+    image: redis
+    restart: unless-stopped
+    environment:
+      PASSWORD: securePassword
+    ports:
+      - 6379:6379
+volumes:
+  db-data:
