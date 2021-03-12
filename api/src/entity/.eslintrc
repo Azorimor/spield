@@ -1,0 +1,6 @@
+{
+  "rules": {
+    "new-cap":"off", // disabled because typeorm decorators
+    "no-unused-vars":"off" // disabled because unused enum values for entities
+  }
+}
