@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Question } from './Question';
 
 @Entity()
@@ -6,6 +6,9 @@ import { Question } from './Question';
  * Answer entity.
  */
 export class Answer {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
   @ManyToOne(() => Question, (question: Question) => question.answers)
   question!: Question;
 

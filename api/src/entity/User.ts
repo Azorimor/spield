@@ -4,9 +4,15 @@ import {
   UpdateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  OneToMany
+  OneToMany,
+  BeforeInsert,
+  BeforeUpdate
 } from 'typeorm';
 import { Spiel } from './Spiel';
+import bcrypt from 'bcrypt';
+import logger from '../util/logger';
+
+const SALT_WORK_FACTOR = 10;
 
 @Entity()
 /**
@@ -16,10 +22,10 @@ export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ unique: true })
   username!: string;
 
-  @Column()
+  @Column({ unique: true })
   email!: string;
 
   @Column()
@@ -39,4 +45,23 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
+
+  /**
+   * Hash the password.
+   * @return {Promise<void>} Nothing.
+   */
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword(): Promise<void> {
+    if (!this.password) {
+      // password not modified.
+      return;
+    }
+    try {
+      const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+      this.password = await bcrypt.hash(this.password, salt);
+    } catch (err) {
+      logger.error(err);
+    }
+  }
 }
