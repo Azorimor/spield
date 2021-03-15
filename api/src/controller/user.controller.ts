@@ -10,10 +10,7 @@ import logger from '../util/logger';
  * @param {Response} res Initial response.
  * @route POST /user
  */
-export const createUser = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const createUser = async (req: Request, res: Response) => {
   const userRepo = getCustomRepository(UserRepository);
   const user = userRepo.create({
     username: req.body.username,
@@ -22,30 +19,43 @@ export const createUser = async (
     firstName: req.body.firstName,
     lastName: req.body.lastName
   });
-  validate(user).then((errors) => {
-    if (errors.length > 0) {
-      logger.info('validation failed. errors: ');
-      logger.info(errors);
-      res.status(404).json(errors);
-      return;
+  const errors = await validate(user);
+  if (errors.length > 0) {
+    res.status(400).json(errors);
+    return;
+  }
+  try {
+    const saved = await userRepo.save(user);
+    logger.info(`User created: ${saved.id}, ${saved.username}`);
+    delete saved.password;
+    delete saved.updatedAt;
+    res.status(200).json(saved);
+  } catch (error) {
+    res.status(400).json({ message: 'User already exists.' });
+  }
+};
+
+/**
+ * Get user by id.
+ * @param {Request} req Initial request.
+ * @param {Response} res Initial response.
+ * @route GET /user/:id
+ */
+export const getUserById = async (req: Request, res: Response) => {
+  const id: number = parseInt(req.params.id, 10);
+  if (isNaN(id) || id < 0) {
+    res.status(400).json({ message: 'Invalid id supplied' });
+    return;
+  }
+  try {
+    const user = await getCustomRepository(UserRepository).findById(id);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
     }
-  });
-  userRepo
-    .save(user)
-    .then((saved) => {
-      logger.info(`User created: ${saved.id}, ${saved.username}`);
-      const saveReturn = {
-        id: saved.id,
-        username: saved.username,
-        email: saved.email,
-        firstName: saved.firstName,
-        lastName: saved.lastName,
-        games: saved.games
-      };
-      res.status(200).json(saveReturn);
-    })
-    .catch((error) => {
-      logger.error(error);
-      res.status(404).json(error);
-    });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send();
+  }
 };

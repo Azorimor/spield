@@ -39,8 +39,8 @@ export class User {
   @IsEmail()
   email!: string;
 
-  @Column()
-  password!: string;
+  @Column({ select: false })
+  password?: string;
 
   @Column({ nullable: true })
   @IsAlpha()
@@ -63,8 +63,8 @@ export class User {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz' })
-  updatedAt!: Date;
+  @UpdateDateColumn({ type: 'timestamptz', select: false })
+  updatedAt?: Date;
 
   /**
    * Hash the password.
