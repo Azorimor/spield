@@ -1,5 +1,18 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  testRegex: './test/.*\\.(test|spec)?\\.(ts|ts)$'
+  globals: {
+      'ts-jest': {
+          tsconfigFile: 'tsconfig.json'
+      }
+  },
+  moduleFileExtensions: [
+      'ts',
+      'js'
+  ],
+  transform: {
+      '^.+\\.(ts|tsx)$': './node_modules/ts-jest/preprocessor.js'
+  },
+  testMatch: [
+      '**/test/**/*.(test|spec).(ts|js)'
+  ],
+  testEnvironment: 'node'
 };
