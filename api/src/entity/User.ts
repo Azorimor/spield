@@ -11,6 +11,14 @@ import {
 import { Spiel } from './Spiel';
 import bcrypt from 'bcrypt';
 import logger from '../util/logger';
+import {
+  IsAlpha,
+  IsAlphanumeric,
+  IsEmail,
+  IsOptional,
+  IsUrl,
+  MinLength
+} from 'class-validator';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -23,19 +31,31 @@ export class User {
   id!: number;
 
   @Column({ unique: true })
+  @MinLength(6)
+  @IsAlphanumeric()
   username!: string;
 
   @Column({ unique: true })
+  @IsEmail()
   email!: string;
 
   @Column()
   password!: string;
 
   @Column({ nullable: true })
+  @IsAlpha()
+  @IsOptional()
   firstName!: string;
 
   @Column({ nullable: true })
+  @IsAlpha()
+  @IsOptional()
   lastName!: string;
+
+  @Column({ nullable: true })
+  @IsUrl()
+  @IsOptional()
+  avatarUrl!: string;
 
   @OneToMany(() => Spiel, (spiel: Spiel) => spiel.owner)
   games!: Spiel[];

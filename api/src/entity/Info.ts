@@ -1,3 +1,4 @@
+import { IsUrl, isURL } from 'class-validator';
 import { ChildEntity, Column } from 'typeorm';
 import { Slide } from './Slide';
 
@@ -21,5 +22,6 @@ export class Info extends Slide {
   headline!: string;
 
   @Column({ nullable: true })
+  @IsUrl()
   imageURL!: string;
 }
