@@ -1,11 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { saveUser } from '../controller/user.controller';
+import { createUser } from '../controller/user.controller';
 
 // eslint-disable-next-line new-cap
 const router: Router = Router();
 
 router.post('/', (req: Request, res: Response) => {
-  saveUser(req, res);
+  createUser(req, res);
 });
 
 router.get('/', (req: Request, res: Response) => {

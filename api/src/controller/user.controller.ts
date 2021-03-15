@@ -10,7 +10,10 @@ import logger from '../util/logger';
  * @param {Response} res Initial response.
  * @route POST /user
  */
-export const saveUser = async (req: Request, res: Response): Promise<void> => {
+export const createUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const userRepo = getCustomRepository(UserRepository);
   const user = userRepo.create({
     username: req.body.username,
