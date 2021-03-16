@@ -15,8 +15,10 @@ import {
   IsAlpha,
   IsAlphanumeric,
   IsEmail,
+  IsNotEmpty,
   IsOptional,
   IsUrl,
+  minLength,
   MinLength
 } from 'class-validator';
 
@@ -57,11 +59,15 @@ export class User {
   @IsOptional()
   avatarUrl!: string;
 
+  @Column({ default: false, select: false })
+  @IsNotEmpty()
+  isAdmin!: boolean;
+
   @OneToMany(() => Spiel, (spiel: Spiel) => spiel.owner)
-  games!: Spiel[];
+  games?: Spiel[];
 
   @CreateDateColumn({ type: 'timestamptz' })
-  createdAt!: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn({ type: 'timestamptz', select: false })
   updatedAt?: Date;
