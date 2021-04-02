@@ -20,6 +20,21 @@ jobs:
   test-api:
     runs-on: ubuntu-latest
 
+    services:
+      postgres: 
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: securePassword
+          POSTGRES_USER: spield
+          POSTGRES_DB: spield
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v2
       - name: Setting up Nodejs
@@ -39,3 +54,12 @@ jobs:
         working-directory: ./api
         run: |
           npm run test
+        env:
+          TYPEORM_CONNECTION: postgres
+          TYPEORM_HOST: localhost
+          TYPEORM_USERNAME: spield
+          TYPEORM_PASSWORD: securePassword
+          TYPEORM_DATABASE: spield
+          TYPEORM_PORT: 5432
+          TYPEORM_SYNCHRONIZE: true
+          TYPEORM_LOGGING: true
