@@ -12,7 +12,7 @@
     "redoc:s": "redoc-cli serve ./openapi/openapi.yaml"
   },
   "author": "Azorimor",
-  "license": "MIT",
+  "license": "GNU GPLv3",
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/chai": "^4.2.15",
