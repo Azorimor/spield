@@ -34,3 +34,34 @@ if (process.env.TYPEORM_LOGGING) {
   typeormLogging = process.env.TYPEORM_LOGGING == 'true';
 }
 export const TYPEORM_LOGGING = typeormLogging;
+
+let typeormCacheDuration = 30000;
+if (process.env.TYPEORM_CACHE_DURATION) {
+  typeormCacheDuration = parseInt(process.env.TYPEORM_CACHE_DURATION);
+}
+
+let typeormCacheAlwaysEnabled = true;
+if (process.env.TYPEORM_CACHE_ALWAYS_ENABLED) {
+  typeormCacheAlwaysEnabled =
+    process.env.TYPEORM_CACHE_ALWAYS_ENABLED == 'true';
+}
+
+interface typeormCache {
+  type: 'redis';
+  options: {
+    host: string;
+    port: string;
+  };
+  duration: number;
+  alwaysEnabled: boolean;
+}
+
+export const TYPEORM_CACHE: typeormCache = {
+  type: 'redis',
+  options: {
+    host: process.env.TYPEORM_CACHE_HOST || 'localhost',
+    port: process.env.TYPEORM_CACHE_PORT || '6379'
+  },
+  duration: typeormCacheDuration,
+  alwaysEnabled: typeormCacheAlwaysEnabled
+};

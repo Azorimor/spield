@@ -12,7 +12,8 @@ import {
   TYPEORM_PASSWORD,
   TYPEORM_DATABASE,
   TYPEORM_SYNCHRONIZE,
-  TYPEORM_LOGGING
+  TYPEORM_LOGGING,
+  TYPEORM_CACHE
 } from './config';
 
 const connection = createConnection({
@@ -24,6 +25,7 @@ const connection = createConnection({
   database: TYPEORM_DATABASE,
   synchronize: TYPEORM_SYNCHRONIZE,
   logging: TYPEORM_LOGGING,
+  cache: TYPEORM_CACHE,
   entities: [Answer, User, Info, Question, Slide, Spiel]
 });
 
