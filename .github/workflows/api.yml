@@ -62,4 +62,5 @@ jobs:
           TYPEORM_DATABASE: spield
           TYPEORM_PORT: 5432
           TYPEORM_SYNCHRONIZE: true
-          TYPEORM_LOGGING: true
+          TYPEORM_LOGGING: false
+          TYPEORM_CACHE_ALWAYS_ENABLED: true
