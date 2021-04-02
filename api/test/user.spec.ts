@@ -9,9 +9,7 @@ describe('POST /user', () => {
   });
 
   afterAll(async () => {
-    console.log('cleanup started');
     await connection.clear();
-    console.log('closing started');
     await connection.close();
   });
 
