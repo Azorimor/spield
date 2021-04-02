@@ -31,6 +31,7 @@ export const createUser = async (req: Request, res: Response) => {
     logger.info(`User created: ${saved.id}, ${saved.username}`);
     delete saved.password;
     delete saved.updatedAt;
+    delete saved.isAdmin;
     res.status(200).json(saved);
   } catch (error) {
     res.status(400).json({ message: 'User already exists.' });

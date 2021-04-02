@@ -60,8 +60,7 @@ export class User {
   avatarUrl!: string;
 
   @Column({ default: false, select: false })
-  @IsNotEmpty()
-  isAdmin!: boolean;
+  isAdmin?: boolean;
 
   @OneToMany(() => Spiel, (spiel: Spiel) => spiel.owner)
   games?: Spiel[];
