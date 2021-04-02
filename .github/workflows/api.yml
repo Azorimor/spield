@@ -34,6 +34,15 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
 
     steps:
       - uses: actions/checkout@v2
@@ -63,4 +72,7 @@ jobs:
           TYPEORM_PORT: 5432
           TYPEORM_SYNCHRONIZE: true
           TYPEORM_LOGGING: false
+          TYPEORM_CACHE: redis
           TYPEORM_CACHE_ALWAYS_ENABLED: true
+          TYPEORM_CACHE_DURATION: 30000 
+          TYPEORM_CACHE_OPTIONS: '{"host":"localhost","port":6379}'
