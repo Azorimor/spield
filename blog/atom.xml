@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://azorimor.github.io/blog</id>
+    <title>SpielD Blog</title>
+    <updated>2021-04-02T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://azorimor.github.io/blog"/>
+    <subtitle>SpielD Blog</subtitle>
+    <icon>https://azorimor.github.io/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>welcome</id>
+        <link href="https://azorimor.github.io/spield/blog/welcome"/>
+        <updated>2021-04-02T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Created the static site to provide documentation for spield as development goes on.]]></summary>
+    </entry>
+</feed>
