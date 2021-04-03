@@ -2,7 +2,6 @@ import connection from './util/connection';
 import request from 'supertest';
 import app from '../src/app';
 import { UserRepository } from '../src/repository/UserRepository';
-import { User } from '../src/entity/User';
 
 describe('POST /user', () => {
   beforeAll(async () => {
