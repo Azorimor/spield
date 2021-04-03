@@ -6,7 +6,8 @@
 [![codecov](https://codecov.io/gh/Azorimor/spield/branch/master/graph/badge.svg?token=TRC2HYO2P5)](https://codecov.io/gh/Azorimor/spield)
 
 Interactive Quizzing application
-
+## More Information
+The documentation will be available at [azorimor.github.io](https://azorimor.github.io/spield/).
 ## Roadmap
 - [ ] User Authentication
 - [ ] LDAP
@@ -21,3 +22,6 @@ Interactive Quizzing application
 - [ ] Different game settings
 - [ ] Completely anonymous
 - [ ] Hosted public version
+
+## Contribute
+For Information about contribution visit the [documentation](https://azorimor.github.io/spield/docs/contribute/contribute).
