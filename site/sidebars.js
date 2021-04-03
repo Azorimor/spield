@@ -18,7 +18,6 @@ module.exports = {
       type: 'category',
       label: 'Docusaurus Tutorial',
       items: [
-        'docusaurus-tutorial/getting-started',
         'docusaurus-tutorial/create-a-page',
         'docusaurus-tutorial/create-a-document',
         'docusaurus-tutorial/create-a-blog-post',

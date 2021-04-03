@@ -1,5 +1,6 @@
 ---
 title: Information
+slug: /
 ---
 
 :::danger Work in progress
