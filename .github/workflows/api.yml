@@ -9,12 +9,14 @@ on:
     paths-ignore:
       - 'README.md'
       - 'LICENSE'
+      - 'site/**'
   pull_request:
     branches:
       - '**'
     paths-ignore:
       - 'README.md'
       - 'LICENSE'
+      - 'site/**'
 
 jobs:
   test-api:
