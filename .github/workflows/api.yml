@@ -76,3 +76,7 @@ jobs:
           TYPEORM_CACHE_ALWAYS_ENABLED: true
           TYPEORM_CACHE_DURATION: 30000 
           TYPEORM_CACHE_OPTIONS: '{"host":"localhost","port":6379}'
+      - name: Upload Codecov
+        working-directory: ./api
+        run: |
+          bash <(curl -s https://codecov.io/bash)
