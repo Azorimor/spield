@@ -2,13 +2,13 @@
 module.exports = {
   title: 'SpielD',
   tagline: 'Interactive Quizzing application',
-  url: 'https://azorimor.github.io/spield',
-  baseUrl: '/',
+  url: 'https://azorimor.github.io',
+  baseUrl: '/spield/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'Azorimor', // Usually your GitHub org/user name.
-  projectName: 'Spield', // Usually your repo name.
+  organizationName: 'azorimor', // Usually your GitHub org/user name.
+  projectName: 'spield', // Usually your repo name.
   themeConfig: {
     navbar: {
       title: 'Home',
