@@ -12,6 +12,10 @@ module.exports = {
       label: 'Contributation',
       items: [
         'contribute/contribute',
+        'contribute/code',
+        'contribute/documentation',
+        'contribute/translations',
+        'contribute/graphics',
       ],
     },
     {
@@ -22,7 +26,6 @@ module.exports = {
         'docusaurus-tutorial/create-a-document',
         'docusaurus-tutorial/create-a-blog-post',
         'docusaurus-tutorial/markdown-features',
-        'docusaurus-tutorial/thank-you',
       ],
     },
   ],
