@@ -84,7 +84,7 @@ describe('POST /user', () => {
 });
 
 describe('GET /user/:id', () => {
-  test('User information should be returned.', async (done) => {
+  test('User information should be returned after valid request.', async (done) => {
     const createdUser = getCustomRepository(UserRepository).create({
       username: 'username3',
       email: 'testmail3@mail.com',
@@ -105,6 +105,33 @@ describe('GET /user/:id', () => {
       avatarUrl: insertedUser.avatarUrl,
       firstName: insertedUser.firstName,
       lastName: insertedUser.lastName
+    });
+    done();
+  });
+
+  test('User id is not in database. Return Code 404', async (done) => {
+    const response = await request(app).get('/user/5').send();
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      message: 'User not found'
+    });
+    done();
+  });
+
+  test('User id is not a number. Return Code 400', async (done) => {
+    const response = await request(app).get('/user/nan').send();
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'Invalid id supplied'
+    });
+    done();
+  });
+
+  test('User id is a negative number. Return Code 400', async (done) => {
+    const response = await request(app).get('/user/-5').send();
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'Invalid id supplied'
     });
     done();
   });
