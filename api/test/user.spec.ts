@@ -2,17 +2,26 @@ import connection from './util/connection';
 import request from 'supertest';
 import app from '../src/app';
 import { UserRepository } from '../src/repository/UserRepository';
+import { getCustomRepository, getRepository } from 'typeorm';
+import { User } from '../src/entity/User';
+
+beforeAll(async (done) => {
+  await connection.create();
+  done();
+});
+
+afterAll(async (done) => {
+  await connection.clear();
+  await connection.close();
+  done();
+});
+
+afterEach(async (done) => {
+  await connection.clear();
+  done();
+});
 
 describe('POST /user', () => {
-  beforeAll(async () => {
-    await connection.create();
-  });
-
-  afterAll(async () => {
-    await connection.clear();
-    await connection.close();
-  });
-
   test('User should be returned.', async (done) => {
     const response = await request(app).post('/user').send({
       username: 'username',
@@ -33,6 +42,7 @@ describe('POST /user', () => {
     });
     done();
   });
+
   test('User should be saved.', async (done) => {
     const response = await request(app).post('/user').send({
       username: 'username2',
@@ -42,10 +52,9 @@ describe('POST /user', () => {
       lastName: 'lastName'
     });
     expect(response.status).toBe(200);
-    const user = await connection
-      .getDBConnection()
-      .getCustomRepository(UserRepository)
-      .findById(response.body.id);
+    const user = await getCustomRepository(UserRepository).findById(
+      response.body.id
+    );
     expect(user).toBeTruthy();
     done();
   });
@@ -66,56 +75,37 @@ describe('POST /user', () => {
       password: 'testpassword'
     });
     expect(response.status).toBe(400);
-    const user = await connection
-      .getDBConnection()
-      .getCustomRepository(UserRepository)
-      .findById(response.body.id);
+    const user = await getCustomRepository(UserRepository).findById(
+      response.body.id
+    );
     expect(user).toBeUndefined();
     done();
   });
 });
 
-// describe('GET /user/:id', () => {
-//   let insertedUser: User;
-
-//   beforeAll(async () => {
-//     await connection.create();
-//     // FIXME Insertion does not work for some reason.
-//     const createdUser = connection
-//       .getDBConnection()
-//       .getRepository(User)
-//       .create({
-//         username: 'username',
-//         email: 'mail@mail.com',
-//         password: 'superPassword',
-//         firstName: 'firstName',
-//         lastName: 'lastName',
-//         avatarUrl: 'https://avatar.com/id=45'
-//       });
-//     insertedUser = await connection
-//       .getDBConnection()
-//       .getRepository(User)
-//       .save(createdUser);
-//   });
-
-//   afterAll(async () => {
-//     await connection.clear();
-//     await connection.close();
-//   });
-
-//   test('User information should be returned.', async (done) => {
-//     const response = await request(app).get(`/user/${insertedUser.id}`).send();
-//     expect(response.status).toBe(200);
-//     expect(response.body).toEqual({
-//       username: 'username',
-//       email: 'testemail@mail.de',
-//       id: expect.any(Number),
-//       createdAt: expect.any(String),
-//       updatedAt: expect.any(String),
-//       avatarUrl: 'https://avatar.com/id=45',
-//       firstName: 'firstName',
-//       lastName: 'lastName'
-//     });
-//     done();
-//   });
-// });
+describe('GET /user/:id', () => {
+  test('User information should be returned.', async (done) => {
+    const createdUser = getCustomRepository(UserRepository).create({
+      username: 'username3',
+      email: 'testmail3@mail.com',
+      password: 'superPassword',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      avatarUrl: 'https://avatar.com/id=45'
+    });
+    const insertedUser = await getRepository(User).save(createdUser);
+    const response = await request(app).get(`/user/${insertedUser.id}`).send();
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      username: insertedUser.username,
+      email: insertedUser.email,
+      id: insertedUser.id,
+      createdAt: insertedUser.createdAt!.toISOString(),
+      updatedAt: insertedUser.updatedAt!.toISOString(),
+      avatarUrl: insertedUser.avatarUrl,
+      firstName: insertedUser.firstName,
+      lastName: insertedUser.lastName
+    });
+    done();
+  });
+});
