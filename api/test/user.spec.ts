@@ -166,8 +166,6 @@ describe('PATCH /user/:id', () => {
     expect(updatedUser).not.toBeUndefined();
     if (updatedUser) {
       expect(response.body).toEqual({});
-      console.log('updated after response:');
-      console.log(updatedUser);
       expect(updatedUser.password).not.toEqual(initialUser.password);
       expect(updatedUser.password).not.toEqual(data.password);
       expect(updatedUser.updatedAt).not.toEqual(
@@ -235,6 +233,48 @@ describe('PATCH /user/:id', () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       message: 'Invalid id supplied'
+    });
+    done();
+  });
+
+  test('Send empty update data. Return Code 400', async (done) => {
+    const initialUser = await getRepository(User).save({
+      username: 'username',
+      email: 'testmail@mail.com',
+      password: 'superPassword',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      avatarUrl: 'https://avatar.com/id=45'
+    });
+
+    const data = {};
+    const response = await request(app)
+      .patch(`/user/${initialUser.id}`)
+      .send(data);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'No data supplied.'
+    });
+    done();
+  });
+
+  test('Send empty update data. Return Code 400', async (done) => {
+    const initialUser = await getRepository(User).save({
+      username: 'username',
+      email: 'testmail@mail.com',
+      password: 'superPassword',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      avatarUrl: 'https://avatar.com/id=45'
+    });
+
+    const data = {};
+    const response = await request(app)
+      .patch(`/user/${initialUser.id}`)
+      .send(data);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'No data supplied.'
     });
     done();
   });

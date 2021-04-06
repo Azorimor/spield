@@ -1,5 +1,6 @@
 import { validate } from 'class-validator';
 import { Request, Response } from 'express';
+import _ from 'lodash';
 import { getCustomRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { UserRepository } from '../repository/UserRepository';
@@ -73,6 +74,10 @@ export const updateUser = async (req: Request, res: Response) => {
   const id: number = parseInt(req.params.id, 10);
   if (isNaN(id) || id < 0) {
     res.status(400).json({ message: 'Invalid id supplied' });
+    return;
+  }
+  if (_.isEmpty(req.body)) {
+    res.status(400).json({ message: 'No data supplied.' });
     return;
   }
   try {
