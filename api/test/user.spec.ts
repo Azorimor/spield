@@ -258,7 +258,7 @@ describe('PATCH /user/:id', () => {
     done();
   });
 
-  test('Send empty update data. Return Code 400', async (done) => {
+  test('Send partial update data. Return Code 200', async (done) => {
     const initialUser = await getRepository(User).save({
       username: 'username',
       email: 'testmail@mail.com',
@@ -267,15 +267,49 @@ describe('PATCH /user/:id', () => {
       lastName: 'lastName',
       avatarUrl: 'https://avatar.com/id=45'
     });
-
-    const data = {};
+    const data = {
+      email: 'othermail@mail.com',
+      avatarUrl: 'https://avatar.com/id=46'
+    };
     const response = await request(app)
       .patch(`/user/${initialUser.id}`)
       .send(data);
-    expect(response.status).toBe(400);
-    expect(response.body).toEqual({
-      message: 'No data supplied.'
+
+    expect(response.status).toBe(200);
+    const updatedUser = await getCustomRepository(UserRepository).findOne({
+      select: [
+        'id',
+        'password', // needed to select password for comparison
+        'avatarUrl',
+        'createdAt',
+        'updatedAt',
+        'email',
+        'firstName',
+        'lastName',
+        'username'
+      ],
+      where: { id: initialUser.id },
+      cache: false
     });
+    expect(updatedUser).not.toBeUndefined();
+    if (updatedUser) {
+      expect(response.body).toEqual({});
+      expect(updatedUser.password).toEqual(initialUser.password);
+      expect(updatedUser.updatedAt).not.toEqual(
+        initialUser.updatedAt!.toISOString()
+      );
+      expect(updatedUser).toEqual(
+        expect.objectContaining({
+          username: initialUser.username,
+          email: data.email,
+          firstName: initialUser.firstName,
+          lastName: initialUser.lastName,
+          avatarUrl: data.avatarUrl,
+          id: initialUser.id,
+          createdAt: initialUser.createdAt
+        })
+      );
+    }
     done();
   });
 });

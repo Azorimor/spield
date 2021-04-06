@@ -94,7 +94,7 @@ export const updateUser = async (req: Request, res: Response) => {
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
     user.avatarUrl = req.body.avatarUrl;
-    const errors = await validate(user);
+    const errors = await validate(user, { skipMissingProperties: true });
     if (errors.length > 0) {
       res.status(400).json(errors);
       return;
