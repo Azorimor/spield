@@ -33,7 +33,12 @@ export class UserRepository extends Repository<User> {
    * @return {Promise<boolean>} result
    */
   public async updateById(id: number, user: any): Promise<boolean> {
-    const result = await this.update({ id }, user);
+    const existing = await this.findOne({ where: { id: id }, cache: false });
+    if (!existing) {
+      return false;
+    }
+    this.merge(existing, user);
+    const result = await this.save(existing);
     return result ? true : false;
   }
 }
