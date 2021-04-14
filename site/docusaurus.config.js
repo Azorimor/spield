@@ -14,7 +14,7 @@ module.exports = {
       title: 'Home',
       logo: {
         alt: 'SpielD Logo',
-        src: 'img/logo.svg',
+        src: 'img/Logo_only.svg',
       },
       items: [
         {
