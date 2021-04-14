@@ -330,6 +330,31 @@ describe('PATCH /user/:id', () => {
     }
     done();
   });
+
+  test('User update with invalid types should fail.', async (done) => {
+    const initialUser = await getRepository(User).save({
+      username: 'username',
+      email: 'testmail@mail.com',
+      password: 'superPassword',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      avatarUrl: 'https://avatar.com/id=45'
+    });
+    const data = {
+      username: 'short',
+      email: 'othermailmail.com',
+      firstName: 'second sName',
+      lastName: 'third 1Name',
+      avatarUrl: 'avatar.com/id=46'
+    };
+    const response = await request(app)
+      .patch(`/user/${initialUser.id}`)
+      .send(data);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveLength(4);
+    done();
+  });
 });
 
 describe('DELETE /user/:id', () => {
