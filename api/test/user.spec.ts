@@ -313,3 +313,48 @@ describe('PATCH /user/:id', () => {
     done();
   });
 });
+
+describe('DELETE /user/:id', () => {
+  test('Existing user gets deleted', async () => {
+    const initialUser = await getRepository(User).save({
+      username: 'username',
+      email: 'testmail@mail.com',
+      password: 'superPassword',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      avatarUrl: 'https://avatar.com/id=45'
+    });
+    const response = await request(app)
+      .delete(`/user/${initialUser.id}`)
+      .send();
+    const deletedUser = await getCustomRepository(UserRepository).findById(
+      initialUser.id
+    );
+    expect(response.status).toBe(200);
+    expect(deletedUser).toBeUndefined();
+  });
+
+  test('User does not exist', async () => {
+    const response = await request(app).delete('/user/5').send();
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ message: 'User not found' });
+  });
+
+  test('User id is not a number. Return Code 400', async (done) => {
+    const response = await request(app).delete('/user/nan').send();
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'Invalid id supplied'
+    });
+    done();
+  });
+
+  test('User id is a negative number. Return Code 400', async (done) => {
+    const response = await request(app).delete('/user/-5').send();
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'Invalid id supplied'
+    });
+    done();
+  });
+});
