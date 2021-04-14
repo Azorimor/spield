@@ -1,5 +1,6 @@
 import { validate } from 'class-validator';
 import { Request, Response } from 'express';
+import _ from 'lodash';
 import { getCustomRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { UserRepository } from '../repository/UserRepository';
@@ -75,6 +76,10 @@ export const updateUser = async (req: Request, res: Response) => {
     res.status(400).json({ message: 'Invalid id supplied' });
     return;
   }
+  if (_.isEmpty(req.body)) {
+    res.status(400).json({ message: 'No data supplied.' });
+    return;
+  }
   try {
     const user = new User();
     if (req.body.username) {
@@ -89,7 +94,7 @@ export const updateUser = async (req: Request, res: Response) => {
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
     user.avatarUrl = req.body.avatarUrl;
-    const errors = await validate(user);
+    const errors = await validate(user, { skipMissingProperties: true });
     if (errors.length > 0) {
       res.status(400).json(errors);
       return;

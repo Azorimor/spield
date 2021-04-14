@@ -75,7 +75,7 @@ jobs:
           TYPEORM_SYNCHRONIZE: true
           TYPEORM_LOGGING: false
           TYPEORM_CACHE: redis
-          TYPEORM_CACHE_ALWAYS_ENABLED: true
+          TYPEORM_CACHE_ALWAYS_ENABLED: false
           TYPEORM_CACHE_DURATION: 30000 
           TYPEORM_CACHE_OPTIONS: '{"host":"localhost","port":6379}'
       - name: Upload Codecov
