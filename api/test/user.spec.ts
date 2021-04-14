@@ -81,6 +81,24 @@ describe('POST /user', () => {
     expect(user).toBeUndefined();
     done();
   });
+
+  test('User does already exists.', async (done) => {
+    await getRepository(User).save({
+      username: 'username',
+      email: 'testmail@mail.com',
+      password: 'superPassword'
+    });
+    const response = await request(app).post('/user').send({
+      username: 'username',
+      password: 'testpassword',
+      email: 'testemail@mail.de'
+    });
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      message: 'User already exists.'
+    });
+    done();
+  });
 });
 
 describe('GET /user/:id', () => {
