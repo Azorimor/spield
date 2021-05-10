@@ -15,3 +15,9 @@ afterEach(async (done) => {
   await connection.clear();
   done();
 });
+
+describe('placeholder', () => {
+  test('Test placeholder', () => {
+    expect(5).toBe(5);
+  });
+});
